@@ -482,16 +482,8 @@
     </div>
 
     <script>
-        async function loadPromoGif() {
-            try {
-                const data = await window.fs.readFile('wizard.gif');
-                const blob = new Blob([data], { type: 'image/gif' });
-                const url = URL.createObjectURL(blob);
-                document.getElementById('promoGif').src = url;
-            } catch (error) {
-                console.error('Error loading promo gif:', error);
-            }
-        }
+        // Set the GIF source directly
+        document.getElementById('promoGif').src = 'wizard.gif';
 
         function showPromoCard() {
             document.getElementById('promoCard').classList.add('show');
@@ -501,7 +493,6 @@
             document.getElementById('promoCard').classList.remove('show');
         }
 
-        loadPromoGif();
         setTimeout(showPromoCard, 15000);
     </script>
 
