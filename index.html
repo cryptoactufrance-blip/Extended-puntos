@@ -242,6 +242,28 @@
             object-fit: cover;
         }
 
+        .promo-gif-wrapper {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(139, 92, 246, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(168, 85, 247, 0.4);
+            overflow: hidden;
+        }
+
+        .wizard-placeholder {
+            font-size: 64px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
         .promo-message {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem;
@@ -270,9 +292,13 @@
                 padding: 15px;
             }
 
-            .promo-gif {
+            .promo-gif-wrapper {
                 width: 100px;
                 height: 100px;
+            }
+
+            .wizard-placeholder {
+                font-size: 48px;
             }
 
             .promo-message {
@@ -476,15 +502,14 @@
     <div id="promoCard" class="promo-card">
         <button class="promo-card-close" onclick="closePromoCard()">×</button>
         <a href="https://app.extended.exchange/join/CRYPTOMAGE" target="_blank" rel="noopener" class="promo-card-content">
-            <img id="promoGif" class="promo-gif" alt="Points Wizard">
+            <div class="promo-gif-wrapper">
+                <div class="wizard-placeholder">🧙‍♂️</div>
+            </div>
             <div class="promo-message">+7.5% points on Extended</div>
         </a>
     </div>
 
     <script>
-        // Set the GIF source directly
-        document.getElementById('promoGif').src = 'wizard.gif';
-
         function showPromoCard() {
             document.getElementById('promoCard').classList.add('show');
         }
@@ -493,7 +518,7 @@
             document.getElementById('promoCard').classList.remove('show');
         }
 
-        setTimeout(showPromoCard, 15000);
+        setTimeout(showPromoCard, 5000);
     </script>
 
 
