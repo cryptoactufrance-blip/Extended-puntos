@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extended Farming - PPM Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0a1f1a 0%, #1a3d35 50%, #2d5a4f 100%);
+            color: #e0f2ef;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 40px 60px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #4ade80;
+            text-shadow: 0 0 30px rgba(74, 222, 128, 0.5);
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #86efac;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .point-value {
+            text-align: center;
+            margin: 25px 0 35px 0;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.3), rgba(74, 222, 128, 0.2));
+            border: 2px solid rgba(74, 222, 128, 0.5);
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.3);
+        }
+
+        .point-value-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+            letter-spacing: 0.5px;
+        }
+
+        .cards-wrapper {
+            text-align: center;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            flex: 1;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(20, 60, 50, 0.6), rgba(15, 45, 38, 0.8));
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: 16px;
+            padding: 24px 18px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: rgba(74, 222, 128, 0.6);
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            color: #4ade80;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(74, 222, 128, 0.3);
+            padding-bottom: 12px;
+        }
+
+        .data-list {
+            list-style: none;
+            flex: 1;
+        }
+
+        .data-item {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-item:hover {
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .data-item.best {
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.25), rgba(74, 222, 128, 0.15));
+            border-left: 3px solid #4ade80;
+            font-weight: 600;
+        }
+
+        .data-item.best:hover {
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.35), rgba(74, 222, 128, 0.25));
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+        }
+
+        .range {
+            color: #d1fae5;
+        }
+
+        .ppm {
+            color: #4ade80;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        footer {
+            text-align: left;
+            padding: 20px 0 0 0;
+            border-top: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .credit {
+            font-size: 0.9rem;
+            color: #86efac;
+        }
+
+        .credit a {
+            color: #4ade80;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .credit a:hover {
+            color: #6ee7b7;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .promo-card {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: linear-gradient(145deg, rgba(139, 92, 246, 0.15), rgba(109, 40, 217, 0.25));
+            border: 2px solid rgba(168, 85, 247, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            display: none;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .promo-card.show {
+            display: block;
+        }
+
+        .promo-card:hover {
+            border-color: rgba(168, 85, 247, 0.8);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .promo-card-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(168, 85, 247, 0.2);
+            border: none;
+            color: #e9d5ff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+        }
+
+        .promo-card-close:hover {
+            background: rgba(168, 85, 247, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .promo-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .promo-gif {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .promo-message {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e9d5ff;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .promo-card {
+                width: 280px;
+                bottom: 10px;
+                right: 10px;
+                padding: 15px;
+            }
+
+            .promo-gif {
+                width: 100px;
+                height: 100px;
+            }
+
+            .promo-message {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .cards-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+
+
+            .card h2 {
+                font-size: 1.1rem;
+            }
+
+            .data-item {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>There's Still Time to Farm Extended</h1>
+            <p class="disclaimer">Point per million $ of volume</p>
+            <p class="disclaimer" style="margin-top: 8px; font-size: 0.75rem;">Disclaimer: Some includes small samples / overlap, for example 1 position also means little volume</p>
+        </header>
+
+        <div class="cards-wrapper">
+            <div class="point-value">
+                <span class="point-value-text">1 point = 2-3$ at current expectations</span>
+            </div>
+
+            <div class="cards-container">
+            <div class="card">
+                <h2>Volume</h2>
+                <ul class="data-list">
+                    <li class="data-item best">
+                        <span class="range">&lt; $100k</span>
+                        <span class="ppm">~360 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">$100–500k</span>
+                        <span class="ppm">~285 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">$500k–1M</span>
+                        <span class="ppm">~259 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">$1–2.5M</span>
+                        <span class="ppm">~254 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">$2.5–5M</span>
+                        <span class="ppm">~241 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">$5–10M</span>
+                        <span class="ppm">~232 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">&gt; $10M</span>
+                        <span class="ppm">~220 PPM</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Taker %</h2>
+                <ul class="data-list">
+                    <li class="data-item">
+                        <span class="range">0–20% taker</span>
+                        <span class="ppm">~184 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">20–50%</span>
+                        <span class="ppm">~215 PPM</span>
+                    </li>
+                    <li class="data-item best">
+                        <span class="range">50–80%</span>
+                        <span class="ppm">~330 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">80–95%</span>
+                        <span class="ppm">~287 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">95–100%</span>
+                        <span class="ppm">~302 PPM</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Hold Time</h2>
+                <ul class="data-list">
+                    <li class="data-item">
+                        <span class="range">&lt;15 min</span>
+                        <span class="ppm">~273 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">15–30 min</span>
+                        <span class="ppm">~253 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">30min–1h</span>
+                        <span class="ppm">~261 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">1–2h</span>
+                        <span class="ppm">~338 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">2–4h</span>
+                        <span class="ppm">~306 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">4–8h</span>
+                        <span class="ppm">~321 PPM</span>
+                    </li>
+                    <li class="data-item best">
+                        <span class="range">12–24h</span>
+                        <span class="ppm">~391 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">&gt;24h</span>
+                        <span class="ppm">Higher*</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Number of Positions</h2>
+                <ul class="data-list">
+                    <li class="data-item best">
+                        <span class="range">1–5 positions</span>
+                        <span class="ppm">~587 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">6–15</span>
+                        <span class="ppm">~350 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">36–75</span>
+                        <span class="ppm">~210 PPM</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Number of Pairs</h2>
+                <ul class="data-list">
+                    <li class="data-item best">
+                        <span class="range">1 pair</span>
+                        <span class="ppm">~315 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">2 pairs</span>
+                        <span class="ppm">~280 PPM</span>
+                    </li>
+                    <li class="data-item">
+                        <span class="range">6+ pairs</span>
+                        <span class="ppm">~255 PPM</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </div>
+
+        <footer>
+            <p class="credit">Data by <a href="https://x.com/pointsgoblin/status/2005657139176472844?s=46" target="_blank" rel="noopener">PointsGoblin</a></p>
+        </footer>
+    </div>
+
+    <div id="promoCard" class="promo-card">
+        <button class="promo-card-close" onclick="closePromoCard()">×</button>
+        <a href="https://app.extended.exchange/join/CRYPTOMAGE" target="_blank" rel="noopener" class="promo-card-content">
+            <img id="promoGif" class="promo-gif" alt="Points Wizard">
+            <div class="promo-message">+7.5% points on Extended</div>
+        </a>
+    </div>
+
+    <script>
+        async function loadPromoGif() {
+            try {
+                const data = await window.fs.readFile('wizard.gif');
+                const blob = new Blob([data], { type: 'image/gif' });
+                const url = URL.createObjectURL(blob);
+                document.getElementById('promoGif').src = url;
+            } catch (error) {
+                console.error('Error loading promo gif:', error);
+            }
+        }
+
+        function showPromoCard() {
+            document.getElementById('promoCard').classList.add('show');
+        }
+
+        function closePromoCard() {
+            document.getElementById('promoCard').classList.remove('show');
+        }
+
+        loadPromoGif();
+        setTimeout(showPromoCard, 15000);
+    </script>
+
+
+</body>
+</html>
